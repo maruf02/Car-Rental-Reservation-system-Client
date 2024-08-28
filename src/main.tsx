@@ -7,8 +7,16 @@ import ErrorPage from "./ErrorPage/ErrorPage";
 import HomePage from "./Pages/HomePage";
 import { Provider } from "react-redux";
 import { persistor, store } from "./Redux/store";
-import LoginPage from "./Pages/LoginPage";
+
 import { PersistGate } from "redux-persist/integration/react";
+import ProtectedRoute from "./Component/ProtectedRoute/ProtectedRoute";
+import DashBoardRoot from "./Root/DashBoardRoot";
+import AdminHomePage from "./DashBoardPanel/AdminPanel/AdminHomePage";
+import UserHomePage from "./DashBoardPanel/UserPanel/UserHomePage";
+import UserProtectRoute from "./Component/userProjectRoute/UserProtectRoute";
+import AdminProtectRoute from "./Component/AdminProtectRoute/AdminProtectRoute";
+import LoginPage from "./Pages/LoginPage/LoginPage";
+import SingUpPage from "./Pages/SingUpPage/SingUpPage";
 
 const router = createBrowserRouter([
   {
@@ -20,9 +28,48 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
       },
+      // {
+      //   path: "/login",
+      //   element: <LoginPage />,
+      // },
+      // {
+      //   path: "/signup",
+      //   element: <SingUpPage />,
+      // },
+    ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/signup",
+    element: <SingUpPage />,
+  },
+  {
+    path: "/DashBoard",
+    element: (
+      <ProtectedRoute>
+        <DashBoardRoot />
+      </ProtectedRoute>
+    ),
+    errorElement: <ErrorPage />,
+    children: [
       {
-        path: "/login",
-        element: <LoginPage />,
+        path: "/DashBoard/admin",
+        element: (
+          <AdminProtectRoute>
+            <AdminHomePage />
+          </AdminProtectRoute>
+        ),
+      },
+      {
+        path: "/DashBoard/user",
+        element: (
+          <UserProtectRoute>
+            <UserHomePage />
+          </UserProtectRoute>
+        ),
       },
     ],
   },

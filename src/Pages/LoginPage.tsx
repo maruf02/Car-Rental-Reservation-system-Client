@@ -1,12 +1,14 @@
 import { Button } from "antd";
-import React from "react";
+
 import { useForm } from "react-hook-form";
 import { useLoginMutation } from "../Redux/features/auth/authApi";
 import { useAppDispatch } from "../Redux/hooks";
 import { setUser } from "../Redux/features/auth/authSlice";
 import { verifyToken } from "../Redux/verifyToken";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -27,8 +29,10 @@ const LoginPage = () => {
     console.log("data", userInfo);
     const res = await login(userInfo).unwrap();
     const user = verifyToken(res.data.accessToken);
-
+    const { role } = user;
+    console.log("userData", role);
     dispatch(setUser({ user: user, token: res.data.accessToken }));
+    navigate(`/DashBoard/${role}`);
     // dispatch(setUser({ user: {}, token: res.data.accessToken }));
   };
   return (
