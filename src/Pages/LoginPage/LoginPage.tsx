@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../Redux/hooks";
-import { useForm } from "react-hook-form";
+
 import { useLoginMutation } from "../../Redux/features/auth/authApi";
 import { verifyToken } from "../../Redux/verifyToken";
 import { setUser } from "../../Redux/features/auth/authSlice";
@@ -17,7 +17,17 @@ type FieldType = {
   password?: string;
 };
 
+type User = {
+  role?: string;
+};
+interface ErrorResponse {
+  data?: {
+    message?: string;
+  };
+}
+
 const LoginPage = () => {
+  // const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [resetLink, setResetLink] = useState("");
@@ -26,29 +36,34 @@ const LoginPage = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { data: userData, isError } = useGetUserEmailQuery(email);
   const [updatePassword] = useUpdatePasswordMutation();
-  const [login, { data, error }] = useLoginMutation();
+  const [login] = useLoginMutation();
 
   // login portion
-
+  console.log(userData);
   const handleLogin = async (event: any) => {
     event.preventDefault();
 
     const form = event.target as HTMLFormElement;
     const email = form.email.value;
     const password = form.password.value;
+    // const userInfo = {
+    //   email: data.email,
+    //   password: data.password,
+    // };
     const userInfo = { email, password };
 
     try {
       const res = await login(userInfo).unwrap();
       const user = verifyToken(res.data.accessToken);
-      const { role } = user;
+      const { role } = user as User;
       //   console.log("User data:", role);
       dispatch(setUser({ user: user, token: res.data.accessToken }));
       navigate(`/DashBoard/${role}`);
     } catch (err) {
-      if (err.data?.message) {
+      const error = err as ErrorResponse;
+      if (error.data?.message) {
         // console.error("Login error:", err.data.message);
-        Swal.fire("Error", err.data.message, "error");
+        Swal.fire("Error", error.data.message as string, "error");
       } else {
         // console.error("Login error:", err);
         Swal.fire("Error", "An unexpected error occurred.", "error");
@@ -73,7 +88,7 @@ const LoginPage = () => {
 
   // **************************************
 
-  const handleEmailConfirmForReset = (event) => {
+  const handleEmailConfirmForReset = (event: React.FormEvent) => {
     event.preventDefault();
 
     const form = event.target as HTMLFormElement;
@@ -97,7 +112,7 @@ const LoginPage = () => {
   // **************************************
 
   // **************************************
-  const updateNewPassword = async (event) => {
+  const updateNewPassword = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const form = event.target as HTMLFormElement;
@@ -170,15 +185,26 @@ const LoginPage = () => {
                           <label className="mb-2 ml-1 font-bold text-xs text-slate-700">
                             Password
                           </label>
-                          <div className="mb-4">
+                          {/* <div className="mb-4">
                             <input
                               type="password"
                               name="password"
-                              required
                               className="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
                               placeholder="Password"
                             />
-                          </div>
+                          </div> */}
+                          <Form.Item<FieldType>
+                            // label="Password"
+                            name="password"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please input your password!",
+                              },
+                            ]}
+                          >
+                            <Input.Password />
+                          </Form.Item>
 
                           <div className="text-center">
                             <button className="inline-block w-full px-6 py-3 mt-6 mb-0 font-bold text-center text-white uppercase align-middle transition-all bg-transparent border-0 rounded-lg cursor-pointer shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in tracking-tight-soft bg-gradient-to-tl from-blue-600 to-cyan-400 hover:scale-102 hover:shadow-soft-xs active:opacity-85">
@@ -186,6 +212,12 @@ const LoginPage = () => {
                             </button>
                           </div>
                         </form>
+                        {/* <div className="text-center">
+                          <button className="inline-block w-full px-6 py-3 mt-6 mb-0 font-bold text-center text-white uppercase align-middle transition-all bg-transparent border-0 rounded-lg cursor-pointer shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in tracking-tight-soft bg-gradient-to-tl from-blue-600 to-cyan-400 hover:scale-102 hover:shadow-soft-xs active:opacity-85">
+                            Sign in
+                          </button>
+                        </div> */}
+                        {/* </form> */}
                         {/* sign in form start */}
                         {/* ********************************* */}
                         <div className="flex mx-auto justify-center pt-0 z-0">
@@ -264,12 +296,11 @@ const LoginPage = () => {
                       <div className="p-6 px-1 pt-0 text-center bg-transparent border-t-0 border-t-solid rounded-b-2xl lg:px-2">
                         <p className="mx-auto mb-6 leading-normal text-lg  ">
                           Don't have an account?
-                          <a
-                            href="../pages/sign-up.html"
-                            className="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text"
-                          >
-                            Sign up
-                          </a>
+                          <Link to="/signup">
+                            <span className="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text pl-2">
+                              Sign up
+                            </span>
+                          </Link>
                         </p>
                       </div>
                     </div>

@@ -1,16 +1,19 @@
-import React, { ReactNode } from "react";
-import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
+import { ReactNode } from "react";
+import { useAppSelector } from "../../Redux/hooks";
 import {
-  logout,
   useCurrentToken,
   useCurrentUser,
 } from "../../Redux/features/auth/authSlice";
 import { Navigate } from "react-router-dom";
 
+type User = {
+  role?: string;
+};
+
 const AdminProtectRoute = ({ children }: { children: ReactNode }) => {
   //   const dispatch = useAppDispatch();
   const token = useAppSelector(useCurrentToken);
-  const admin = useAppSelector(useCurrentUser);
+  const admin = useAppSelector(useCurrentUser) as User;
 
   if (!token) {
     return <Navigate to="/login" replace={true} />;

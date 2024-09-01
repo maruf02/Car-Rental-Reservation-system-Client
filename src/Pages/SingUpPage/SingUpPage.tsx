@@ -1,11 +1,75 @@
+import { Form, Input, Button, Checkbox } from "antd";
 import Navbar from "../../Navbar/Navbar";
 import "./../../assets/CustomCss/CustomCss.css";
+import { useSignUpUserMutation } from "../../Redux/features/user/userApi";
 
+import Swal from "sweetalert2";
+import { Link, useNavigate } from "react-router-dom";
+interface ErrorResponse {
+  data?: {
+    message?: string;
+  };
+}
 const SingUpPage = () => {
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [signUp] = useSignUpUserMutation();
+
+  const onFinish = async (values: any) => {
+    // console.log("Success:", values);
+    // console.log("object", values.name);
+
+    const userInfo = {
+      name: values.name,
+      email: values.email,
+      role: "user",
+      password: values.password,
+      phone: values.phone,
+      address: "",
+    };
+    console.log("userInfo", userInfo);
+
+    try {
+      await signUp(userInfo).unwrap();
+      navigate("/login");
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Signup Success",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (err) {
+      const error = err as ErrorResponse;
+      if (error.data?.message) {
+        // Check if the error message includes "E11000 duplicate key error"
+        if (error.data.message.includes("E11000 duplicate key error")) {
+          Swal.fire(
+            "Error",
+            "This email is already registered.PLease sign In",
+            "error"
+          );
+        } else {
+          Swal.fire("Error", error.data.message, "error");
+        }
+      } else {
+        // console.error("Login error:", err);
+        Swal.fire("Error", "An unexpected error occurred.", "error");
+      }
+    }
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+    Swal.fire("Fill The form with correct info!!");
+  };
+  // const onChange: CheckboxProps["onChange"] = (e) => {
+  //   console.log(`checked = ${e.target.checked}`);
+  // };
   return (
     <div className="w-full h-full min-h-screen bg-white">
       <Navbar />
-      <body className="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
+      <div className="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
         <div className="container sticky top-0 z-sticky">
           <div className="flex flex-wrap -mx-3">
             <div className="w-full max-w-full px-3 flex-0"></div>
@@ -16,87 +80,192 @@ const SingUpPage = () => {
             <div className="relative flex items-center p-0 overflow-hidden bg-center bg-cover min-h-75-screen">
               <div className="container z-10">
                 <div className="flex flex-wrap mt-0 -mx-3">
-                  <div className="flex flex-col w-full max-w-full px-3 mx-auto md:flex-0 shrink-0 md:w-6/12 lg:w-5/12 xl:w-4/12">
+                  <div className="flex flex-col w-full max-w-full px-3 mx-auto md:flex-0 shrink-0 md:w-6/12 lg:w-6/12 xl:w-5/12">
                     <div className="relative flex flex-col min-w-0 mt-32 break-words bg-transparent border-0 shadow-none rounded-2xl bg-clip-border">
                       <div className="p-6 pb-0 mb-0 bg-transparent border-b-0 rounded-t-2xl">
                         <h3 className="relative z-10 font-bold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text">
-                          Welcome back
+                          Welcome to join
                         </h3>
                         <p className="mb-0">
-                          Enter your email and password to sign in
+                          Enter your details to create an account
                         </p>
                       </div>
                       <div className="flex-auto p-6">
-                        <form role="form">
-                          <label className="mb-2 ml-1 font-bold text-xs text-slate-700">
-                            Email
-                          </label>
-                          <div className="mb-4">
-                            <input
-                              type="email"
-                              className="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
-                              placeholder="Email"
-                              aria-label="Email"
-                              aria-describedby="email-addon"
-                            />
-                          </div>
-                          <label className="mb-2 ml-1 font-bold text-xs text-slate-700">
-                            Password
-                          </label>
-                          <div className="mb-4">
-                            <input
-                              type="email"
-                              className="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
-                              placeholder="Password"
-                              aria-label="Password"
-                              aria-describedby="password-addon"
-                            />
-                          </div>
-                          <div className="min-h-6 mb-0.5 block pl-12">
-                            <input
-                              id="rememberMe"
-                              className="mt-0.54 rounded-10 duration-250 ease-soft-in-out after:rounded-circle after:shadow-soft-2xl after:duration-250 checked:after:translate-x-5.25 h-5 relative float-left -ml-12 w-10 cursor-pointer appearance-none border border-solid border-gray-200 bg-slate-800/10 bg-none bg-contain bg-left bg-no-repeat align-top transition-all after:absolute after:top-px after:h-4 after:w-4 after:translate-x-px after:bg-white after:content-[''] checked:border-slate-800/95 checked:bg-slate-800/95 checked:bg-none checked:bg-right"
-                              type="checkbox"
-                            />
-                            <p className="mb-2 ml-1 font-normal cursor-pointer select-none text-sm text-slate-700">
-                              Forgot Password
-                            </p>
-                          </div>
-                          <div className="text-center">
-                            <button
-                              type="button"
-                              className="inline-block w-full px-6 py-3 mt-6 mb-0 font-bold text-center text-white uppercase align-middle transition-all bg-transparent border-0 rounded-lg cursor-pointer shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in tracking-tight-soft bg-gradient-to-tl from-blue-600 to-cyan-400 hover:scale-102 hover:shadow-soft-xs active:opacity-85"
+                        {/* Form Start */}
+                        <Form
+                          form={form}
+                          name="register"
+                          onFinish={onFinish}
+                          onFinishFailed={onFinishFailed}
+                          scrollToFirstError
+                        >
+                          <Form.Item
+                            name="name"
+                            label="Name"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please input your name!",
+                              },
+                            ]}
+                          >
+                            <Input className="lg:ml-16 lg:w-9/12" />
+                          </Form.Item>
+
+                          <Form.Item
+                            name="email"
+                            label="Email"
+                            rules={[
+                              {
+                                type: "email",
+                                message: "The input is not valid E-mail!",
+                              },
+                              {
+                                required: true,
+                                message: "Please input your E-mail!",
+                              },
+                            ]}
+                          >
+                            <Input className="lg:ml-16 lg:w-9/12" />
+                          </Form.Item>
+
+                          <Form.Item
+                            name="password"
+                            label="Password"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please input your password!",
+                              },
+                            ]}
+                            hasFeedback
+                          >
+                            <Input.Password className="lg:ml-10 lg:w-9/12" />
+                          </Form.Item>
+
+                          <Form.Item
+                            name="confirm"
+                            label="Confirm Password"
+                            dependencies={["password"]}
+                            hasFeedback
+                            rules={[
+                              {
+                                required: true,
+                                message: "Please confirm your password!",
+                              },
+                              ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                  if (
+                                    !value ||
+                                    getFieldValue("password") === value
+                                  ) {
+                                    return Promise.resolve();
+                                  }
+                                  return Promise.reject(
+                                    new Error(
+                                      "The two passwords that you entered do not match!"
+                                    )
+                                  );
+                                },
+                              }),
+                            ]}
+                          >
+                            <Input.Password className="lg:w-10/12" />
+                          </Form.Item>
+                          <Form.Item
+                            name="phone"
+                            label="Phone Number"
+                            rules={[
+                              {
+                                required: false,
+                                message: "Please input your phone number!",
+                              },
+                            ]}
+                          >
+                            <Input className="lg:ml-6 lg:w-10/12" />
+                          </Form.Item>
+                          <div>
+                            <Form.Item
+                              name="agreement"
+                              valuePropName="checked"
+                              rules={[
+                                {
+                                  validator: (_, value) =>
+                                    value
+                                      ? Promise.resolve()
+                                      : Promise.reject(
+                                          new Error(
+                                            "You must accept the agreement"
+                                          )
+                                        ),
+                                },
+                              ]}
                             >
-                              Sign in
-                            </button>
+                              <Checkbox className="ml-2">
+                                <p
+                                  onClick={() => {
+                                    const modal = document.getElementById(
+                                      "term&condition"
+                                    ) as HTMLDialogElement;
+                                    if (modal) {
+                                      modal.showModal();
+                                    }
+                                  }}
+                                  className="pt-4 text-green-600"
+                                >
+                                  I agree to the terms and conditions
+                                </p>
+                              </Checkbox>
+                            </Form.Item>
                           </div>
-                        </form>
+                          <Form.Item>
+                            <Button
+                              type="primary"
+                              htmlType="submit"
+                              className="w-full bg-black"
+                            >
+                              Sign up
+                            </Button>
+                          </Form.Item>
+                        </Form>
+                        {/* Form End */}
                       </div>
                       <div className="p-0 px-1 pt-0 text-center bg-transparent border-t-0 border-t-solid rounded-b-2xl lg:px-2">
                         <p className="mx-auto mb-2 leading-normal text-sm">
-                          Don't have an account?
-                          <a
-                            href="../pages/sign-up.html"
-                            className="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text"
-                          >
-                            Sign up
+                          Already have an account?
+                          <a className="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text pl-2 text-md">
+                            <Link to="/login">Sign in</Link>
                           </a>
                         </p>
                       </div>
                       <div className="p-0 px-1 pt-0 text-center bg-transparent border-t-0 border-t-solid rounded-b-2xl lg:px-2">
-                        <p className="mx-auto mb-6 leading-normal text-sm  ">
-                          <a
-                            href="../pages/sign-up.html"
+                        <p className="mx-auto mb-6 leading-normal text-sm">
+                          <button
+                            onClick={() => {
+                              const modal = document.getElementById(
+                                "term&condition"
+                              ) as HTMLDialogElement;
+                              if (modal) {
+                                modal.showModal();
+                              }
+                            }}
                             className="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text pr-5"
                           >
                             Privacy Policy
-                          </a>
-                          <a
-                            href="../pages/sign-up.html"
+                          </button>
+                          <button
+                            onClick={() => {
+                              const modal = document.getElementById(
+                                "term&condition"
+                              ) as HTMLDialogElement;
+                              if (modal) {
+                                modal.showModal();
+                              }
+                            }}
                             className="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text"
                           >
                             Terms of Service
-                          </a>
+                          </button>
                         </p>
                       </div>
                     </div>
@@ -116,11 +285,107 @@ const SingUpPage = () => {
               </div>
             </div>
           </section>
-        </main>
-        {/* *********************************************** */}
 
-        {/* *********************************************** */}
-      </body>
+          <dialog id="term&condition" className="modal">
+            <div className="modal-box bg-white">
+              <div className="container mx-auto p-6">
+                <h1 className="text-2xl font-bold mb-4">Car Rental Policies</h1>
+
+                {/* Terms and Conditions */}
+                <section className="mb-8">
+                  <h2 className="text-xl font-semibold mb-2">
+                    Terms and Conditions
+                  </h2>
+                  <p className="mb-4">
+                    <strong>1. Rental Agreement:</strong> By renting a vehicle
+                    from [Your Company Name], you agree to the terms and
+                    conditions set forth in this agreement. The renter must hold
+                    a valid driver's license and meet the age requirements
+                    specified by [Your Company Name]. The rental period, payment
+                    terms, and vehicle return conditions are agreed upon at the
+                    time of rental.
+                  </p>
+                  <p className="mb-4">
+                    <strong>2. Vehicle Use:</strong> The rented vehicle must be
+                    used in a safe and lawful manner. The renter is responsible
+                    for any damage, loss, or theft of the vehicle during the
+                    rental period. The vehicle must not be used for illegal
+                    activities, racing, or towing. Only authorized drivers
+                    listed in the rental agreement are allowed to operate the
+                    vehicle.
+                  </p>
+                  <p className="mb-4">
+                    <strong>3. Insurance and Liability:</strong> The renter is
+                    responsible for any damage to the vehicle, as well as
+                    third-party injuries or property damage, unless covered by
+                    insurance. Additional insurance options may be available at
+                    the time of rental. The renter must report any accidents or
+                    damage to [Your Company Name].
+                  </p>
+                </section>
+
+                {/* Privacy Policy */}
+                <section className="mb-8">
+                  <h2 className="text-xl font-semibold mb-2">Privacy Policy</h2>
+                  <p className="mb-4">
+                    [Your Company Name] is committed to protecting your privacy.
+                    We collect personal information necessary for providing our
+                    services, such as your name, contact details, and payment
+                    information. This information is used solely for the
+                    purposes of processing your rental and improving our
+                    services. We do not share your personal information with
+                    third parties without your consent, except as required by
+                    law.
+                  </p>
+                  <p className="mb-4">
+                    We use secure systems to protect your data and ensure that
+                    your personal information is handled with care. You have the
+                    right to access, update, or delete your personal information
+                    by contacting us directly.
+                  </p>
+                  <p className="mb-4">
+                    By using our services, you agree to the collection and use
+                    of your personal information in accordance with this Privacy
+                    Policy.
+                  </p>
+                </section>
+
+                {/* Terms of Service */}
+                <section className="mb-8">
+                  <h2 className="text-xl font-semibold mb-2">
+                    Terms of Service
+                  </h2>
+                  <p className="mb-4">
+                    By accessing and using our website, you agree to comply with
+                    these Terms of Service. You are responsible for maintaining
+                    the confidentiality of your account information and for all
+                    activities that occur under your account. You agree to
+                    notify [Your Company Name] immediately of any unauthorized
+                    use of your account or any other breach of security.
+                  </p>
+                  <p className="mb-4">
+                    [Your Company Name] reserves the right to modify or
+                    terminate the service at any time without prior notice. We
+                    may also update these terms from time to time, and it is
+                    your responsibility to review them regularly.
+                  </p>
+                  <p className="mb-4">
+                    Your continued use of the service after any changes to the
+                    Terms of Service will constitute your acceptance of such
+                    changes.
+                  </p>
+                </section>
+              </div>
+              <div className="modal-action">
+                <form method="dialog">
+                  {/* if there is a button in form, it will close the modal */}
+                  <button className="btn">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+        </main>
+      </div>
     </div>
   );
 };

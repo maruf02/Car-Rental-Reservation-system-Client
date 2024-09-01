@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { useAppSelector } from "../../Redux/hooks";
 import {
   useCurrentToken,
@@ -6,14 +6,18 @@ import {
 } from "../../Redux/features/auth/authSlice";
 import { Navigate } from "react-router-dom";
 
+type User = {
+  role?: string;
+};
+
 const UserProtectRoute = ({ children }: { children: ReactNode }) => {
   const token = useAppSelector(useCurrentToken);
-  const user = useAppSelector(useCurrentUser);
+  const user = useAppSelector(useCurrentUser) as User;
 
   if (!token) {
     return <Navigate to="/login" replace={true} />;
   }
-  if (user.role != "user") {
+  if (user?.role != "user") {
     return <Navigate to="/login" replace={true} />;
   }
 

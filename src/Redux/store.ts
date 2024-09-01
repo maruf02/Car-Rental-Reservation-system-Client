@@ -25,6 +25,7 @@ export const store = configureStore({
     [baseApi.reducerPath]: baseApi.reducer,
     // auth: authReducer,
     auth: persistedAuthReducer,
+
     // product: productReducer,
     // placeOrder: placeOrderReducer,
   },
