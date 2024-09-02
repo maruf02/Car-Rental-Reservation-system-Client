@@ -29,12 +29,14 @@ const adminItems: MenuItem[] = [
   { key: "4", icon: <DesktopOutlined />, label: "Manage Return" },
   { key: "5", icon: <DesktopOutlined />, label: "User Management" },
   { key: "6", icon: <DesktopOutlined />, label: "Report" },
+  { key: "7", icon: <DesktopOutlined />, label: "Homepage" },
   // { key: "7", icon: <DesktopOutlined />, label: "imageUP" },
 ];
 const userItems: MenuItem[] = [
   { key: "1", icon: <PieChartOutlined />, label: "DashBoard" },
   { key: "2", icon: <DesktopOutlined />, label: "Booking Management" },
   { key: "3", icon: <ContainerOutlined />, label: "Payment Management" },
+  { key: "4", icon: <ContainerOutlined />, label: "Homepage" },
 ];
 
 interface User {
@@ -80,6 +82,9 @@ const NavBarDashBoard = () => {
       case "6":
         navigate("/DashBoard/ReportGenerate");
         break;
+      case "7":
+        navigate("/");
+        break;
       // case "7":
       //   navigate("/DashBoard/imageUP");
       //   break;
@@ -99,6 +104,9 @@ const NavBarDashBoard = () => {
         break;
       case "3":
         navigate("/DashBoard/ManagePayment");
+        break;
+      case "4":
+        navigate("/");
         break;
 
       default:

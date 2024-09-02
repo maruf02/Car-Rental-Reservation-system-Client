@@ -34,8 +34,38 @@ const Footer = () => {
                 <FaMapMarkerAlt className="text-green-500" />
                 <span>123 Camper St, City, Country</span>
               </div>
+              <div className="p-0 px-1 pt-0 text-center bg-transparent border-t-0 border-t-solid rounded-b-2xl lg:px-2">
+                <p className="mx-auto mb-6 leading-normal text-sm">
+                  <button
+                    onClick={() => {
+                      const modal = document.getElementById(
+                        "term&condition"
+                      ) as HTMLDialogElement;
+                      if (modal) {
+                        modal.showModal();
+                      }
+                    }}
+                    className="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text pr-5"
+                  >
+                    Privacy Policy
+                  </button>
+                  <button
+                    onClick={() => {
+                      const modal = document.getElementById(
+                        "term&condition"
+                      ) as HTMLDialogElement;
+                      if (modal) {
+                        modal.showModal();
+                      }
+                    }}
+                    className="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text"
+                  >
+                    Terms of Service
+                  </button>
+                </p>
+              </div>
             </div>
-            <h2 className="text-base   pb-2 text-center">
+            <h2 className="text-base  text-white pb-2 text-center">
               SpeedeRex © {todayYear} All Rights Reserved. Designed by SpeedeRex
               Ltd.
             </h2>
@@ -86,6 +116,98 @@ const Footer = () => {
           </motion.div>
         </div>
       </footer>
+      <dialog id="term&condition" className="modal">
+        <div className="modal-box bg-white">
+          <div className="container mx-auto p-6">
+            <h1 className="text-2xl font-bold mb-4">Car Rental Policies</h1>
+
+            {/* Terms and Conditions */}
+            <section className="mb-8">
+              <h2 className="text-xl font-semibold mb-2">
+                Terms and Conditions
+              </h2>
+              <p className="mb-4">
+                <strong>1. Rental Agreement:</strong> By renting a vehicle from
+                [Your Company Name], you agree to the terms and conditions set
+                forth in this agreement. The renter must hold a valid driver's
+                license and meet the age requirements specified by [Your Company
+                Name]. The rental period, payment terms, and vehicle return
+                conditions are agreed upon at the time of rental.
+              </p>
+              <p className="mb-4">
+                <strong>2. Vehicle Use:</strong> The rented vehicle must be used
+                in a safe and lawful manner. The renter is responsible for any
+                damage, loss, or theft of the vehicle during the rental period.
+                The vehicle must not be used for illegal activities, racing, or
+                towing. Only authorized drivers listed in the rental agreement
+                are allowed to operate the vehicle.
+              </p>
+              <p className="mb-4">
+                <strong>3. Insurance and Liability:</strong> The renter is
+                responsible for any damage to the vehicle, as well as
+                third-party injuries or property damage, unless covered by
+                insurance. Additional insurance options may be available at the
+                time of rental. The renter must report any accidents or damage
+                to [Your Company Name].
+              </p>
+            </section>
+
+            {/* Privacy Policy */}
+            <section className="mb-8">
+              <h2 className="text-xl font-semibold mb-2">Privacy Policy</h2>
+              <p className="mb-4">
+                [Your Company Name] is committed to protecting your privacy. We
+                collect personal information necessary for providing our
+                services, such as your name, contact details, and payment
+                information. This information is used solely for the purposes of
+                processing your rental and improving our services. We do not
+                share your personal information with third parties without your
+                consent, except as required by law.
+              </p>
+              <p className="mb-4">
+                We use secure systems to protect your data and ensure that your
+                personal information is handled with care. You have the right to
+                access, update, or delete your personal information by
+                contacting us directly.
+              </p>
+              <p className="mb-4">
+                By using our services, you agree to the collection and use of
+                your personal information in accordance with this Privacy
+                Policy.
+              </p>
+            </section>
+
+            {/* Terms of Service */}
+            <section className="mb-8">
+              <h2 className="text-xl font-semibold mb-2">Terms of Service</h2>
+              <p className="mb-4">
+                By accessing and using our website, you agree to comply with
+                these Terms of Service. You are responsible for maintaining the
+                confidentiality of your account information and for all
+                activities that occur under your account. You agree to notify
+                [Your Company Name] immediately of any unauthorized use of your
+                account or any other breach of security.
+              </p>
+              <p className="mb-4">
+                [Your Company Name] reserves the right to modify or terminate
+                the service at any time without prior notice. We may also update
+                these terms from time to time, and it is your responsibility to
+                review them regularly.
+              </p>
+              <p className="mb-4">
+                Your continued use of the service after any changes to the Terms
+                of Service will constitute your acceptance of such changes.
+              </p>
+            </section>
+          </div>
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };

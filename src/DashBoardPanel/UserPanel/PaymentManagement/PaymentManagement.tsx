@@ -62,6 +62,12 @@ const PaymentManagement = () => {
           timer: 1500,
         });
         refetch();
+        const modal = document.getElementById(
+          "paymentModal"
+        ) as HTMLDialogElement;
+        if (modal) {
+          modal.close();
+        }
       } catch (error) {
         Swal.fire({
           position: "top-end",

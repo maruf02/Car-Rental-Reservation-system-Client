@@ -176,6 +176,11 @@ const BookingManagement = () => {
         showConfirmButton: false,
         timer: 1500,
       });
+      const modal = document.getElementById("editBooking") as HTMLDialogElement;
+      if (modal) {
+        modal.close();
+      }
+
       //   Swal.fire("Success", "Booking updated successfully.", "success");
       refetch();
     } catch (error) {

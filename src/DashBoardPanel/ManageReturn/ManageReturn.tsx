@@ -8,6 +8,7 @@ import { TimePicker } from "antd";
 import dayjs from "dayjs";
 
 const ManageReturn = () => {
+  const [startTime, setStartTime] = useState<string | null>(null);
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
     null
   );
@@ -26,9 +27,9 @@ const ManageReturn = () => {
     return <p>Loading...</p>;
   }
 
-  const handleReturn = (bookingId: string) => {
+  const handleReturn = (bookingId: string, start: string) => {
     setSelectedBookingId(bookingId);
-
+    setStartTime(start);
     const modal = document.getElementById("returnModal") as HTMLDialogElement;
     if (modal) {
       modal.showModal();
@@ -65,6 +66,22 @@ const ManageReturn = () => {
         timer: 1500,
       });
     }
+  };
+
+  const disabledHours = () => {
+    if (!startTime) return [];
+    const startHour = dayjs(startTime, "HH:mm").hour();
+    return Array.from({ length: startHour }, (_, index) => index);
+  };
+
+  const disabledMinutes = (selectedHour: number) => {
+    if (!startTime) return [];
+    const startMinute = dayjs(startTime, "HH:mm").minute();
+    const startHour = dayjs(startTime, "HH:mm").hour();
+    if (selectedHour === startHour) {
+      return Array.from({ length: startMinute }, (_, index) => index);
+    }
+    return [];
   };
 
   return (
@@ -131,7 +148,9 @@ const ManageReturn = () => {
                         <div className="flex flex-row gap-2">
                           {booking.endTime === null ? (
                             <button
-                              onClick={() => handleReturn(booking._id)}
+                              onClick={() =>
+                                handleReturn(booking._id, booking.startTime)
+                              }
                               className="btn btn-sm btn-primary"
                             >
                               Return
@@ -170,6 +189,8 @@ const ManageReturn = () => {
                       format="HH:mm"
                       defaultOpenValue={dayjs("00:00", "HH:mm")}
                       getPopupContainer={(trigger) => trigger.parentElement!}
+                      disabledHours={disabledHours}
+                      disabledMinutes={disabledMinutes}
                     />
                   </div>
                   <div className="flex justify-center my-5">

@@ -1,45 +1,70 @@
 import { useAppDispatch } from "../../Redux/hooks";
 import { logout } from "../../Redux/features/auth/authSlice";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
+interface User {
+  email: string;
+  role: string;
+}
 
-const AdminMeneBar = (
+const adminMenu = (
   <>
     <li>
-      <NavLink to="/" className="activeNavLink ">
+      <NavLink to="/DashBoard/admin" className="activeNavLink ">
         <button>Dashboard</button>
       </NavLink>
     </li>
     <li>
-      <NavLink to="/" className="activeNavLink ">
+      <NavLink to="/DashBoard/ManageCars" className="activeNavLink ">
         <button>Manage Car</button>
       </NavLink>
     </li>
     <li>
-      <NavLink to="/" className="activeNavLink ">
+      <NavLink to="/DashBoard/ManageBooking" className="activeNavLink ">
         <button>Manage Booking</button>
       </NavLink>
     </li>
     <li>
-      <NavLink to="/" className="activeNavLink ">
+      <NavLink to="/DashBoard/ManageReturn" className="activeNavLink ">
         <button>Manage Return</button>
       </NavLink>
     </li>
     <li>
-      <NavLink to="/" className="activeNavLink ">
+      <NavLink to="/DashBoard/ManageUsers" className="activeNavLink ">
         <button>User Management</button>
       </NavLink>
     </li>
     <li>
-      <NavLink to="/" className="activeNavLink ">
+      <NavLink to="/DashBoard/ReportGenerate" className="activeNavLink ">
         <button>Report</button>
+      </NavLink>
+    </li>
+  </>
+);
+const userMenu = (
+  <>
+    <li>
+      <NavLink to="/DashBoard/user" className="activeNavLink ">
+        <button>DashBoard</button>
+      </NavLink>
+    </li>
+    <li>
+      <NavLink to="/DashBoard/BookingManagement" className="activeNavLink ">
+        <button>Booking Management</button>
+      </NavLink>
+    </li>
+    <li>
+      <NavLink to="/DashBoard/ManagePayment" className="activeNavLink ">
+        <button>Payment Management</button>
       </NavLink>
     </li>
   </>
 );
 const NavBarMobile = () => {
   const dispatch = useAppDispatch();
-  // const user = useSelector((state: RootState) => state.auth.user);
-  // const { role, email } = user;
+  const user = useSelector((state: RootState) => state.auth.user) as User;
+  const { role, email } = user;
   const handleLogout = () => {
     console.log("object");
     dispatch(logout());
@@ -48,7 +73,7 @@ const NavBarMobile = () => {
     <div className="w-full">
       <div className="navbar  ">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <a className="btn btn-ghost text-2xl font-semibold">SpeedeRex</a>
         </div>
         <div className="flex-none">
           <div className="dropdown dropdown-end"></div>
@@ -69,7 +94,9 @@ const NavBarMobile = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-[#295F98]  rounded-box z-[10] mt-3 w-52 p-2 shadow"
             >
-              {AdminMeneBar}
+              <li>{email}</li>
+              {role === "admin" ? <>{adminMenu}</> : <>{userMenu}</>}
+              {/* {adminMenu} */}
               <li>
                 <button onClick={handleLogout}>Logout</button>
               </li>

@@ -3,7 +3,7 @@ import StarRatings from "react-star-ratings";
 import SideBySideMagnifier from "../ImageMagnifier/SideBySideMagnifier";
 import Swal from "sweetalert2";
 import { useGetCarByIdQuery } from "../../Redux/features/car/carApi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RangePickerProps } from "antd/es/date-picker";
 import { DatePicker, Space, Input, Select } from "antd";
 import { DownOutlined } from "@ant-design/icons";
@@ -25,6 +25,7 @@ interface ErrorResponse {
   };
 }
 const BookingDetailsViewPage = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [additionValue, setAdditionValue] = useState<string[]>([]);
@@ -49,6 +50,54 @@ const BookingDetailsViewPage = () => {
   if (isLoading) {
     <p>loding</p>;
   }
+  // const handleBookingFormSubmit = async (event: React.FormEvent) => {
+  //   event.preventDefault();
+  //   const form = event.target as HTMLFormElement;
+  //   const nidT = form.nid.value;
+  //   const passport = form.passport.value;
+  //   const DLicense = form.DLicense.value;
+  //   const paymentInfo = form.paymentInfo.value;
+
+  //   const BookingData = {
+  //     nid: nidT,
+  //     DLicense,
+  //     passport,
+  //     paymentInfo,
+  //     date: selectedDate,
+  //     carId: id,
+  //     startTime: selectedTime,
+  //     additionInfo: additionValue,
+  //     user: user._id,
+  //   };
+
+  //   console.log("BookingData", BookingData);
+
+  //   try {
+  //     const response = await createBooking(BookingData).unwrap();
+  //     //   Swal.fire({
+  //     //     position: "top-end",
+  //     //     title: "Booking Successful",
+  //     //     text: `Booking ID: ${response.data._id}`,
+  //     //     icon: "success",
+  //     //   });
+  //     Swal.fire({
+  //       position: "top-end",
+  //       icon: "success",
+  //       title: "Booking Successful",
+  //       text: `Booking ID: ${response.data._id}`,
+  //       showConfirmButton: false,
+  //       timer: 1500,
+  //     });
+  //   } catch (error) {
+  //     const err = error as ErrorResponse;
+  //     Swal.fire({
+  //       title: "Booking Failed",
+  //       text: `An error occurred: ${err.message} `,
+  //       icon: "error",
+  //     });
+  //   }
+  // };
+
   const handleBookingFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
@@ -69,32 +118,65 @@ const BookingDetailsViewPage = () => {
       user: user._id,
     };
 
-    console.log("BookingData", BookingData);
-
-    try {
-      const response = await createBooking(BookingData).unwrap();
-      //   Swal.fire({
-      //     position: "top-end",
-      //     title: "Booking Successful",
-      //     text: `Booking ID: ${response.data._id}`,
-      //     icon: "success",
-      //   });
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Booking Successful",
-        text: `Booking ID: ${response.data._id}`,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    } catch (error) {
-      const err = error as ErrorResponse;
-      Swal.fire({
-        title: "Booking Failed",
-        text: `An error occurred: ${err.message} `,
-        icon: "error",
-      });
+    // Close the modal before showing the Swal confirmation
+    const modal = document.getElementById(
+      "BookingInfoModal"
+    ) as HTMLDialogElement;
+    if (modal) {
+      modal.close();
     }
+
+    // Delay to ensure modal is closed before opening Swal
+    setTimeout(async () => {
+      const result = await Swal.fire({
+        title: "Confirm Your Booking",
+        html: `
+        <p><strong>NID:</strong> ${BookingData.nid}</p>
+        <p><strong>Passport:</strong> ${BookingData.passport}</p>
+        <p><strong>Driving License:</strong> ${BookingData.DLicense}</p>
+        <p><strong>Payment Info:</strong> ${BookingData.paymentInfo}</p>
+        <p><strong>Date:</strong> ${BookingData.date}</p>
+        <p><strong>Time:</strong> ${BookingData.startTime}</p>
+        <p><strong>Additional Info:</strong> ${
+          BookingData.additionInfo.join(", ") || "None"
+        }</p>
+      `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, book it!",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const response = await createBooking(BookingData).unwrap();
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Booking Successful",
+            text: `Booking ID: ${response.data._id}`,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          navigate("/Booking");
+        } catch (error) {
+          const err = error as ErrorResponse;
+          Swal.fire({
+            title: "Booking Failed",
+            text: `An error occurred: ${err.message}`,
+            icon: "error",
+          });
+        }
+      } else {
+        Swal.fire({
+          title: "Booking Cancelled",
+          text: "Your booking has been cancelled.",
+          icon: "info",
+        });
+      }
+    }, 300); // Adjust this delay if needed
   };
 
   const disabledDate: RangePickerProps["disabledDate"] = (current) => {
