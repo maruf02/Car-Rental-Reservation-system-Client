@@ -76,13 +76,15 @@ const Navbar = () => {
                 </a>
               </li>
               <li>
-                <a
-                  className="block px-4 py-2 mr-2 font-normal transition-all lg-max:opacity-0 duration-250 ease-soft-in-out text-sm text-slate-700 lg:px-2"
-                  href="../pages/sign-in.html"
-                >
-                  <i className="mr-1 fas fa-key opacity-60"></i>
-                  Sign In
-                </a>
+                <NavLink to="/login">
+                  <a
+                    className="block px-4 py-2 mr-2 font-normal transition-all lg-max:opacity-0 duration-250 ease-soft-in-out text-sm text-slate-700 lg:px-2"
+                    href="../pages/sign-in.html"
+                  >
+                    <i className="mr-1 fas fa-key opacity-60"></i>
+                    Sign In
+                  </a>
+                </NavLink>
               </li>
             </ul>
             {/* <!-- online builder btn  --> */}

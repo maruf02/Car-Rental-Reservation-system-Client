@@ -172,7 +172,7 @@ const FeatureCar = () => {
                                     Feature: {product.features.join(", ")}
                                   </div> */}
                                 </div>
-                                <Link to={`/ProductDetailsView/${product._id}`}>
+                                <Link to={`/carsDetailsView/${product._id}`}>
                                   <div className="card-actions mt-3">
                                     <button className="btn btn-primary w-full">
                                       View Details
