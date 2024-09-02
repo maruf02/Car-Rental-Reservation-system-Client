@@ -29,8 +29,9 @@ const BookingDetailsViewPage = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [additionValue, setAdditionValue] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
-  const user = useSelector((state: RootState) => state.auth.user) as User;
-  const { _id: userId } = user;
+  const user =
+    (useSelector((state: RootState) => state.auth.user) as User) || null;
+  // const { _id: userId } = user;
   const { data: productsData, isLoading } = useGetCarByIdQuery(id as string);
   const [createBooking] = useCreateBookingMutation();
   const product = productsData?.data || {};
@@ -65,7 +66,7 @@ const BookingDetailsViewPage = () => {
       carId: id,
       startTime: selectedTime,
       additionInfo: additionValue,
-      user: userId,
+      user: user._id,
     };
 
     console.log("BookingData", BookingData);

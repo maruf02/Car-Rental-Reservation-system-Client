@@ -37,7 +37,7 @@ const LoginPage = () => {
     // dispatch(setUser({ user: {}, token: res.data.accessToken }));
   };
   return (
-    <div>
+    <div className="  ">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="id">ID: </label>

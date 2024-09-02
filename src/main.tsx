@@ -55,11 +55,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/Booking",
-        element: <BookingPage />,
+        element: (
+          <ProtectedRoute>
+            <BookingPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/bookingDetailsView/:id",
-        element: <BookingDetailsViewPage />,
+        element: (
+          <ProtectedRoute>
+            <BookingDetailsViewPage />
+          </ProtectedRoute>
+        ),
       },
       // {
       //   path: "/login",
