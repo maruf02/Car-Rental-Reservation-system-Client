@@ -187,7 +187,7 @@ const AboutUsPage = () => {
                 </div>
                 <div className="flex items-center space-x-2 mb-2">
                   <FaEnvelope className="text-red-500" />
-                  <span>info@campershop.com</span>
+                  <span>info@speederex.com</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <FaMapMarkerAlt className="text-green-500" />

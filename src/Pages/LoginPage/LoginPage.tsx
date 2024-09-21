@@ -143,14 +143,11 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
-        <div className="container sticky top-0 z-sticky">
-          <div className="flex flex-wrap -mx-3">
-            <div className="w-full max-w-full px-3 flex-0">
-              {/* <!-- Navbar --> */}
-              <Navbar />
-            </div>
-          </div>
+        <div className="w-full max-w-full   flex-0">
+          {/* <!-- Navbar --> */}
+          <Navbar />
         </div>
+
         <main className="mt-0 transition-all duration-200 ease-soft-in-out">
           <section>
             <div className="relative flex items-center p-0 overflow-hidden bg-center bg-cover min-h-75-screen">

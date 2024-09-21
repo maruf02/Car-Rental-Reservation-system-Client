@@ -58,7 +58,7 @@ const FeatureCar = () => {
           {/* title section */}
           <div className="flex flex-row justify-between py-5">
             <h1 className="text-xl md:text-3xl text-black font-bold">
-              Featured Products:
+              Featured Car:
             </h1>
             <NavLink to="/products" className="activeNavLink ">
               <button className="btn btn-primary btn-sm flex flex-row justify-center align-middle items-center gap-1 mr-5">
@@ -152,8 +152,9 @@ const FeatureCar = () => {
                                       starSpacing="1px"
                                     />
                                   </div>
-                                  <p className="m-0 text-md h-20">
-                                    Description: {product.description}
+                                  <p className="m-0 text-md h-24">
+                                    Description:
+                                    {product.description.slice(0, 150)}....
                                   </p>
                                   <p className="w-full h-20 flex flex-row flex-wrap py-5">
                                     Feature:

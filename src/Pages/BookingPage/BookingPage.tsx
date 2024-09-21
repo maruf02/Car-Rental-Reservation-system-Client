@@ -145,7 +145,7 @@ const BookingPage = () => {
         {/* ****************************************************************************************************** */}
         {/* title bar left section */}
         <div className="flex-1 ">
-          <a className=" text-4xl font-bold underline pl-3">ALL PRODUCTS: </a>
+          <a className=" text-4xl font-bold underline pl-3">ALL CARS: </a>
         </div>
         {/* title bar left section */}
         {/* ****************************************************************************************************** */}

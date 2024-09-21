@@ -59,15 +59,31 @@ const CarDetailsViewPage = () => {
             <p className="broder border-2 border-gray-300 my-2"></p>
             <p>Description: {product.description}</p>
           </div>
-          <Link to="/Booking">
-            <div className="flex justify-center ">
-              <button className="btn btn-primary mt-4 my-5 w-2/4 mt-5">
-                Book Now
-              </button>
+          {product.status === "unavailable" ? (
+            <>
+              <Link to="/Booking">
+                <div className="flex justify-center ">
+                  <button className="btn btn-primary mt-4 my-5 w-2/4 mt-5">
+                    Book Now
+                  </button>
 
-              <br />
-            </div>
-          </Link>
+                  <br />
+                </div>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/Booking">
+                <div className="flex justify-center ">
+                  <button className="btn btn-primary mt-4 my-5 w-2/4 mt-5">
+                    Book Now
+                  </button>
+
+                  <br />
+                </div>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

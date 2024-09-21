@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useGetMyBookingsQuery } from "../../../Redux/features/booking/bookingApi";
+import {
+  useGetMyBookingsQuery,
+  useUpdateBookingMutation,
+} from "../../../Redux/features/booking/bookingApi";
 import Swal from "sweetalert2";
-import { useCreatePaymentMutation } from "../../../Redux/features/payment/paymentApi";
 
 const PaymentManagement = () => {
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
@@ -13,8 +15,7 @@ const PaymentManagement = () => {
     isLoading,
     refetch,
   } = useGetMyBookingsQuery(undefined);
-  // const [updateBooking] = useUpdateBookingMutation();
-  const [createPayment] = useCreatePaymentMutation();
+  const [updateBooking] = useUpdateBookingMutation();
   console.log(selectedBookingId, setSelectedBookingId);
   const myBookings = myBooking?.data || [];
 
@@ -47,41 +48,37 @@ const PaymentManagement = () => {
     }
   };
   const handlePaymentSubmit = async () => {
-    try {
-      const paymentData = {
-        bookingId: paymentBooking._id,
-        userId: paymentBooking.user._id,
-        amount: paymentBooking.totalCost,
-        paymentMethod: "credit_card", // example
-        status: "completed", // example
-        date: paymentBooking.date,
-        startTime: paymentBooking.startTime,
-        endTime: paymentBooking.endTime,
-      };
-      console.log("paymentData", paymentData);
-
-      // Assume createPayment returns a response with payment_url
-      const res = await createPayment(paymentData).unwrap();
-
-      // Redirect the user to the payment URL
-      window.location.href = res.data.payment_url;
-
-      Swal.fire(
-        "Payment Successful",
-        "Your payment has been processed",
-        "success"
-      );
-      console.log("paymentRes", res);
-      refetch();
-    } catch (error) {
-      Swal.fire(
-        "Error",
-        "There was a problem processing your payment",
-        "error"
-      );
+    if (paymentBooking) {
+      try {
+        await updateBooking({
+          BookingId: paymentBooking._id,
+          BookingModifyData: { payment: "paid" },
+        }).unwrap();
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Payment successful.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        refetch();
+        const modal = document.getElementById(
+          "paymentModal"
+        ) as HTMLDialogElement;
+        if (modal) {
+          modal.close();
+        }
+      } catch (error) {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Payment failed.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     }
   };
-
   return (
     <div>
       <h1 className=" text-4xl text-center pt-5">PaymentManagement</h1>
